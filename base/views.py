@@ -244,3 +244,11 @@ def profile(request):
     }
 
     return render(request, 'base/profile.html', context)
+
+
+def new_view(request):
+    return HttpResponse('new view!!!')
+
+
+def another_view(request):
+    return HttpResponse('kjndfkjvndfjkv')
