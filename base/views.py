@@ -252,3 +252,7 @@ def new_view(request):
 
 def another_view(request):
     return HttpResponse('kjndfkjvndfjkv')
+
+#println
+
+
