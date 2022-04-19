@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calendar</title>
+    <style>
+        .container-calendar{
+            max-width: 1200px;
+            margin: auto;
+            background: linear-gradient(90deg, #EEA390 0%, #EB796F 43%, #EB796F 100%);
+            border-radius: 10px;
+            padding: 10px 25px 30px;
+
+        }
+
+        .calendar-table{
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .button {
+            border: 1px solid #eeeeee;
+            background-color: #FFF;
+            color: #EB796F;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            width: 32%;
+        }
+
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            background-color: #FFFFFF;
+            border-radius: 15px 15px 10px 10px;
+            font-family:     'Raleway', sans-serif;
+        }
+
+        td, th {
+            border: 2px #EEA390;
+            text-align: left;
+            padding: 3px;
+            border-style: dashed;
+        }
+        td{
+            padding: 2px;
+        }
+
+        tr.weekdays {
+            border-color: #EB796F;
+            border-style: dashed;
+
+
+
+        }
+        .header-bar-calendar-wrapper{
+            display: inline-block;
+            justify-content: space-between;
+            color: #fff;
+            width: 100%;
+            align-items: center;
+
+
+        }
+        .header-bar-calendar-wrapper a{
+            color: rgb(247, 247, 247);
+            text-decoration: none;
+
+        }
+
+    </style>
+</head>
+
+    </div>
+<body>
+    <div class="calendar">
+        <div class="container-calendar">
+            <div class="calendar-wrapper">
+                <div class="header-bar-calendar">
+        <div class="container-calendar">
+            <div class="header-bar-calendar-wrapper">
+                <div><h1>{{ month }} {{year}}</h1></div>
+
+                <div>
+                    <a href="{% url 'task-calendar' prev_month.year prev_month.month %}"><button class="button">Previous month</button></a>
+                    <a href="{% url 'task-calendar-current' %}"><button class="button">Current month</button></a>
+                    <a href="{% url 'task-calendar' next_month.year next_month.month %}"><button class="button">Next month</button></a>
+                </div>
+                <div style="padding-top: 10px"><a href="{% url 'tasks' %}">&#8592; GO BACK</a></div>
+            </div>
+        </div>
+                <div class="calendar-table">
+                     <table>
+                    <tr class="weekdays">
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                        <th>Sunday</th>
+                    </tr>
+                    <tr>
+                    {% with ''|center:start_weekday as range %}
+                    {% for weekday in range %}
+                        <td></td>
+                    {% endfor%}
+                    {% endwith %}
+                    {% for day in days %}
+                        <td>
+                        {{ day.day.day }}
+                        {% if day.tasks %}
+                            <ul class="calendar-tasks">
+                            {% for task in day.tasks %}
+                            <li>
+                                <a href="{% url 'task-update' task.task.id %}">{{task.task}}</a>
+                                {% if task.deadline %} <span style="color: red">deadline</span> {% endif %}
+                            </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <br>
+                            <p style="padding-left: 6px;">relax, there is no tasks for this day!</p>
+                        {% endif %}
+                        </td>
+                        {% if day.day.weekday == 6 %}
+                        </tr><tr>
+
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                </table>
+                </div>
+
+            </div>
+    </div>
+</div>
+
+</body>
+</html>

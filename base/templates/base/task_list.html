@@ -1,0 +1,118 @@
+{% extends 'base/main.html' %}
+{%  block content %}
+
+<div class="header">
+    <a href="{% url 'profile' %}"><h1 class="list_task">Profile</h1></a>
+    <a href="{% url 'tasks' %}"><h1 class="chat">Chat</h1></a>
+    <a href="{% url 'task-calendar-current' %}"><h1 class="event_calendar">Event Calendar</h1></a>
+
+
+</div>
+
+
+<div class="header-bar" xmlns:https="http://www.w3.org/1999/xhtml">
+    <div>
+        <h1>Hello, {{request.user|title}}</h1>
+        <div class="profile-image-wrapper-list">
+            <img class="" src="{{ user.profile.image.url }}">
+        </div>
+
+        <h3 style="margin: 0">You have <i>{{count}}</i> incomplete task{{ count|pluralize:"s" }}</h3>
+
+    </div>
+        {% if request.user.is_authenticated%}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+
+    </div>
+
+
+<!-- <hr>
+<h1>My To Do List</h1>
+-->
+
+<div id="search-add-wrapper">
+    <form method="GET" style="margin-top: 20px; display: flex">
+    <input type="text" name="search-area" value="{{search_input}}">
+    <input class="button" type="submit" value='Search'>
+</form>
+    <a id="add-link" href="{% url 'task-create' %}">&#x2b;</a>
+</div>
+
+
+
+
+
+<div class="task-items-wrapper">
+    {% for task in tasks %}
+    <div class="task-wrapper" data-position="{{task.pk}}">
+        <div class="task-title">
+            <input {% if task.complete %} checked {% endif %} type="checkbox" class="task-checkbox" id="task-checkbox-{{task.id}}" onclick="checkTask({{task.id}})">
+
+            <a href="{% url 'task-update' task.id %}">{{task}}</a>
+        <div class = "timee">
+            <p class = "created">Start Date:<br> <b>{{task.created}}</b></p>
+            <p class = "dead_line">Deadline:<br> <b>{{task.deadline}}</b></p>
+
+        </div>
+
+
+        </div>
+        <div class="task-controls">
+            <a class="delete-link" href="{% url 'task-delete' task.id %}">&#215;</a>
+        </div>
+    </div>
+
+    {% empty %}
+    <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
+        <h3>No tasks.</h3>
+        <h3>Create a <a style="text-decoration: none; color: #e53935;" href="{% url 'task-create' %}">New task</a> ! </h3>
+    </div>
+    {% endfor %}
+    </div>
+
+{% block script %}
+<script>
+
+    function checkTask(task_id){
+        let checkbox = document.getElementById(`task-checkbox-${task_id}`)
+        axios.get('/check_task/' + task_id)
+        .then(res => {
+            console.log(res)
+            checkbox.checked = res.data.complete
+        })
+        .catch(err => {
+            console.log('error occured')
+        })
+    }
+</script>
+{% endblock script %}
+
+
+
+
+
+<!--
+<table>
+    <tr>
+        <th>Item</th>
+    </tr>
+    {% for task in tasks %}
+    <tr>
+        <td>{{task.title}}</td>
+        <td><input {% if task.complete %} checked {% endif %} type="checkbox" class="task-checkbox" id="task-checkbox-{{task.id}}" onclick="checkTask({{task.id}})"></td>
+        <td><a href="{% url 'task' task.id %}">View</a></td>
+        <td><a href="{% url 'task-update' task.id %}">Edit</a></td>
+        <td><a href="{% url 'task-delete' task.id %}">Delete</a></td>
+
+    </tr>
+    {% empty %}
+    <h3>No items in list</h3>
+    {% endfor %}
+</table> -->
+
+{%  endblock content %}
+
+
