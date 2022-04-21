@@ -1,9 +1,15 @@
 from django.urls import path
-from . import views
 from .views import TaskList, TaskDetail, TaskCreate, TaskUpdate, DeleteView, CustomLoginView, RegisterPage
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import (
+    PostListView,
+    PostDetailView,
+    PostCreateView,
+    PostUpdateView,
+)
+from . import views
 
 urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
@@ -20,6 +26,12 @@ urlpatterns = [
     path('task-calendar/<int:year>/<int:month>', views.task_calendar, name='task-calendar'),
     path('get-task-ajax/<int:task_id>', views.get_task_ajax, name='get-task-ajax'),
     path('profile/', views.profile, name='profile'),
+    path('posts', PostListView.as_view(), name='blog-home'),
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('post/new/', PostCreateView.as_view(), name='post-create'),
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
+    path('about/', views.about, name='blog-about'),
+
 ]
 
 if settings.DEBUG:

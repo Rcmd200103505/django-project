@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
 
-class BaseConfig(AppConfig):
-    name = 'sample'
+# class BaseConfig(AppConfig):
+#     name = 'sample'
 
 
 class UsersConfig(AppConfig):
@@ -10,3 +10,7 @@ class UsersConfig(AppConfig):
 
     def ready(self):
        import base.signals
+
+
+class BlogConfig(AppConfig):
+    name = 'sample'

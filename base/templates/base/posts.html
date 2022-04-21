@@ -1,0 +1,24 @@
+{% extends "base/main.html" %}
+{% block content %}
+<div class="header">
+    <a href="{% url 'tasks' %}"><h1 class="posts-tasks">Tasks</h1></a>
+    <a href="{% url 'profile' %}"><h1 class="posts-profile">Profile</h1></a>
+    <a href="{% url 'task-calendar-current' %}"><h1 class="posts-eventcalendar">Calendar</h1></a>
+    <a href="{% url 'post-create' %}"><h1 class="posts-addnewpost">Add New Post</h1></a>
+
+
+</div>
+    {% for post in posts %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

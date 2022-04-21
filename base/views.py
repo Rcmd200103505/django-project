@@ -14,6 +14,16 @@ from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib import messages
 from .forms import UserUpdateForm, ProfileUpdateForm, UserRegisterForm
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView
+)
+from .models import Post
 
 
 class CustomLoginView(LoginView):
@@ -246,14 +256,6 @@ def profile(request):
     return render(request, 'base/profile.html', context)
 
 
-def new_view(request):
-    return HttpResponse('new view!!!')
-
-
-def another_view(request):
-    return HttpResponse('kjndfkjvndfjkv')
-
-
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -265,6 +267,52 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'base/register.html', {'form': form})
+
+
+def home(request):
+    context = {
+        'posts': Post.objects.all()
+    }
+    return render(request, 'base/posts.html', context)
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'base/posts.html'  # <app>/<model>_<viewtype>.html
+    context_object_name = 'posts'
+    ordering = ['-date_posted']
+
+
+class PostDetailView(DetailView):
+    model = Post
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'content']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+def about(request):
+    return render(request, 'base/about.html', {'title': 'About'})
 
 
 

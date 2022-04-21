@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from datetime import datetime, date
 from django.utils.timezone import make_aware, is_aware
 from PIL import Image
+from django.urls import reverse
+from django.utils import timezone
+
 
 class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -13,7 +16,6 @@ class Task(models.Model):
     complete = models.BooleanField(default=False, null=False)
     created = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
     deadline = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
-
 
     def save(self, *args, **kwargs):
         from dateutil import parser
@@ -54,4 +56,14 @@ class Profile(models.Model):
             img.save(self.image.path)
 
 
-#ainur didn't do anything for this project
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('post-detail', kwargs={'pk': self.pk})
