@@ -24,6 +24,7 @@ from django.views.generic import (
     DeleteView
 )
 from .models import Post
+from .models import Document
 
 
 class CustomLoginView(LoginView):
@@ -129,10 +130,10 @@ def get_tasks_for_day(day, user=None):
              } for task in Task.objects.filter(deadline__gte=day,
                                                created__lte=day)]
     return [
-            {'task': task,
-             'deadline': task.deadline.day == day.day
-             } for task in Task.objects.filter(deadline__gte=day,
-                                               created__lte=day, user=user)]
+        {'task': task,
+         'deadline': task.deadline.day == day.day
+         } for task in Task.objects.filter(deadline__gte=day,
+                                           created__lte=day, user=user)]
 
 
 def task_calendar(request, year, month):
@@ -315,4 +316,39 @@ def about(request):
     return render(request, 'base/about.html', {'title': 'About'})
 
 
+def editor(request):
+    docid = int(request.GET.get('docid', 0))
+    documents = Document.objects.all()
 
+    if request.method == 'POST':
+        docid = int(request.POST.get('docid', 0))
+        title = request.POST.get('title')
+        content = request.POST.get('content', '')
+
+        if docid > 0:
+            document = Document.objects.get(pk=docid)
+            document.title = title
+            document.content = content
+            document.save()
+
+            return redirect('editor')
+        else:
+            document = Document.objects.create(title=title, content=content)
+
+    if docid > 0:
+        document = Document.objects.get(pk=docid)
+    else:
+        document = ''
+    context = {
+        'docid': docid,
+        'documents': documents,
+        'document': document
+    }
+
+    return render(request, 'base/editor.html', context)
+
+def delete_document(request, docid):
+    document = Document.objects.get(pk=docid)
+    document.delete()
+
+    return redirect('editor')
