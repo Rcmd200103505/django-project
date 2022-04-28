@@ -77,6 +77,26 @@
     {% endfor %}
     </div>
 
+    <div class="random-things-wrapper">
+        <div class="header-quote"><h1>Quote of the Day</h1></div>
+        <div class="content-quote">
+                <div class="quote-area">
+            <i class="fas fa-quote-left"></i>
+            <p class="quote">There is nothing happens to any person but what was in his power to go through with.</p>
+            <i class="fas fa-quote-right"></i>
+        </div>
+        <div class="author">
+            <span>__</span>
+            <span class="name-quote">Marcus Aurelius</span>
+        </div>
+        <div class="button-quotes">
+            <div class="features">
+                <button class="button-quote" style="border-color: #EB796F; margin-top: 20px">New Quote</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
 {% block script %}
 <script>
 
@@ -91,6 +111,21 @@
             console.log('error occured')
         })
     }
+
+    const quoteText = document.querySelector(".quote"),
+    authorName = document.querySelector(".author .name-quote"),
+    quoteBtn = document.querySelector(".button-quote");
+
+    function randomQuote() {
+        quoteBtn.innerText = "Loading Quote...";
+        fetch("https://api.quotable.io/random").then(res => res.json()).then(result => {
+            console.log(result);
+            quoteText.innerText = result.content;
+            authorName.innerText = result.author;
+            quoteBtn.innerText = "New Quote";
+        });
+    }
+    quoteBtn.addEventListener("click", randomQuote);
 </script>
 {% endblock script %}
 
