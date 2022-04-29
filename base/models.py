@@ -69,12 +69,23 @@ class Post(models.Model):
         return reverse('post-detail', kwargs={'pk': self.pk})
 
 
-
 class Document(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         ordering = ('title',)
+
+
+class Room(models.Model):
+    name = models.CharField(max_length=1000)
+
+
+class Message(models.Model):
+    value = models.CharField(max_length=1000000)
+    date = models.DateTimeField(default=datetime.now, blank=True)
+    user = models.CharField(max_length=1000000)
+    room = models.CharField(max_length=1000000)

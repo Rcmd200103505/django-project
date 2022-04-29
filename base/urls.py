@@ -33,6 +33,13 @@ urlpatterns = [
     path('about/', views.about, name='blog-about'),
     path('editor/', views.editor, name='editor'),
     path('delete_document/<int:docid>/', views.delete_document, name='delete_document'),
+    path('home/', views.home, name='home'),
+    path('<str:room>/', views.room, name='room'),
+    path('home/checkview/', views.checkview, name='checkview'),
+    path('send', views.send, name='send'),
+    path('getMessages/<str:room>/', views.getMessages, name='getMessages'),
+
+
 
 ]
 
